@@ -283,6 +283,10 @@ namespace VeiculosAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult ExcluirVeiculo(int id)
         {
+            var usuarioEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
+            var usuario = _sVTADbContext.Usuarios.FirstOrDefault(u => u.Email == usuarioEmail);
+            if (usuario == null)
+                return NotFound("Usuario não encontrado");
             var veiculo = _sVTADbContext.Veiculos.Find(id);
             _sVTADbContext.Veiculos.Remove(veiculo);
             _sVTADbContext.SaveChanges();
